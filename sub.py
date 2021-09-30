@@ -2,12 +2,12 @@
 ！！！必看！！！
 进入https://wfw.scu.edu.cn/ncov/wap/default/index即打卡网页，登录后在“所在地点”中获取当前位置信息，
 然后F12，在element里面用ctrl+f搜索geo_api_info，把对应位置的geo_api_info的内容复制到https://www.sojson.com/yasuo.html
-先"去除转义"再"unicode转中文"，把获取的结果复制到下面对应的geo_api_info的位置，此脚本中地址默认为四川大学江安校区。
+先"去除转义"再"unicode转中文"，把获取的结果复制到下面对应的geo_api_info的位置，此脚本中地址默认为四川大学望江校区，江安校区的地址在注释中，可以自行添加/取消注释。
 '''
 
 # -*- coding: utf-8 -*-
 """
-Modified on 20200917
+Modified on 20210930
 @author: HyperMn
 """
 
@@ -64,7 +64,7 @@ def get_daily(s: requests.Session):
 
 def submit(s: requests.Session, old: dict):
     new_daily = {
-        "qksm": old["qksm"],
+"qksm": old["qksm"],
         "remark": old["remark"],
         "gllx": old["gllx"],
         "glksrq": old["glksrq"],
@@ -76,11 +76,7 @@ def submit(s: requests.Session, old: dict):
         "jcjg": old["jcjg"],
         "jcqzrq": old["jcqzrq"],
         "sfjcqz": old["sfjcqz"],
-        "sfjxhsjc": old['sfjxhsjc'],    #是否进行核酸检查 1
-        'hsjcjg': old['hsjcjg'],        #核算检测结果 2
-        "hsjcrq": "2020-09-11",
-        "hsjcdd": "四川大学华西医院",
-        "szxqmc": "江安校区",
+        "szxqmc": old['szxqmc'],
         'tw': old['tw'],                #体温 3
         'sfcxtz': old['sfcxtz'],        #是否出现体征？ 4
         'sfjcbh': old['sfjcbh'],        #是否接触病患 ？疑似/确诊人群 5
@@ -88,7 +84,8 @@ def submit(s: requests.Session, old: dict):
         'sfyyjc': old['sfyyjc'], #是否医院检查？ 7
         'jcjgqr': old['jcjgqr'], #检查结果确认？ 8
         'address': old['address'], # 9
-        'geo_api_info': '{"type":"complete","position":{"Q":30.556680501303,"R":103.991700846355,"lng":103.991701,"lat":30.556681},"location_type":"html5","message":"Get geolocation success.Convert Success.Get address success.","accuracy":40,"isConverted":true,"status":1,"addressComponent":{"citycode":"028","adcode":"510116","businessAreas":[{"name":"白家","id":"510116","location":{"Q":30.562482,"R":104.006821,"lng":104.006821,"lat":30.562482}}],"neighborhoodType":"","neighborhood":"","building":"","buildingType":"","street":"长城路二段","streetNumber":"187号","country":"中国","province":"四川省","city":"成都市","district":"双流区","township":"西航港街道"},"formattedAddress":"四川省成都市双流区西航港街道励行西路四川大学江安校区","roads":[],"crosses":[],"pois":[],"info":"SUCCESS"}', # 10
+        # 'geo_api_info': '{"type":"complete","position":{"Q":30.556680501303,"R":103.991700846355,"lng":103.991701,"lat":30.556681},"location_type":"html5","message":"Get geolocation success.Convert Success.Get address success.","accuracy":40,"isConverted":true,"status":1,"addressComponent":{"citycode":"028","adcode":"510116","businessAreas":[{"name":"白家","id":"510116","location":{"Q":30.562482,"R":104.006821,"lng":104.006821,"lat":30.562482}}],"neighborhoodType":"","neighborhood":"","building":"","buildingType":"","street":"长城路二段","streetNumber":"187号","country":"中国","province":"四川省","city":"成都市","district":"双流区","township":"西航港街道"},"formattedAddress":"四川省成都市双流区西航港街道励行西路四川大学江安校区","roads":[],"crosses":[],"pois":[],"info":"SUCCESS"}', # 10
+        'geo_api_info': '{"type":"complete","position":{"Q":30.62923529731,"R":104.09010172526098,"lng":104.090102,"lat":30.629235},"location_type":"html5","message":"Get sdkLocation failed.Get geolocation success.Convert Success.Get address success.","accuracy":40,"isConverted":true,"status":1,"addressComponent":{"citycode":"028","adcode":"510107","businessAreas":[],"neighborhoodType":"科教文化服务;学校;高等院校","neighborhood":"四川大学","building":"","buildingType":"","street":"望江路","streetNumber":"71号","country":"中国","province":"四川省","city":"成都市","district":"武侯区","township":"望江路街道"},"formattedAddress":"四川省成都市武侯区望江路街道四川大学四川大学望江校区","roads":[],"crosses":[],"pois":[],"info":"SUCCESS"}',
         'area': old['area'], # 11
         'province': old['province'], # 12
         'city': old['city'], # 13
@@ -105,10 +102,17 @@ def submit(s: requests.Session, old: dict):
         'sfsqhzjkk': old['sfsqhzjkk'],  # 22
         'sfygtjzzfj': old['sfygtjzzfj'],# 23 
         'ismoved': old['ismoved'],      #？所在地点 24
-	    'zgfxdq': old['zgfxdq'],
-	    'mjry': old['mjry'],
-	    'csmjry': old['csmjry'],
-        "created_uid": old["created_uid"]
+        'sfjzxgym':old['sfjzxgym'],        #是否接种过新冠疫苗，4月13日新增
+        'sfjzdezxgym':old['sfjzdezxgym'],        #是否接种第二剂新冠疫苗，4月13日新增
+        'jzxgymrq': old['jzxgymrq'],
+        'jzdezxgymrq': old['jzdezxgymrq'],
+	'zgfxdq': old['zgfxdq'],
+	'mjry': old['mjry'],
+	'csmjry': old['csmjry'],
+	'bzxyy': old['bzxyy'],
+        "created_uid": old["created_uid"],
+	'id': old['id'],
+        'app_id': 'scu'
         }
 
     r = s.post("https://wfw.scu.edu.cn/ncov/wap/default/save", data=new_daily)
