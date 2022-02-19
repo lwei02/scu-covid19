@@ -104,8 +104,10 @@ def submit(s: requests.Session, old: dict):
         'ismoved': old['ismoved'],      #？所在地点 24
         'sfjzxgym':old['sfjzxgym'],        #是否接种过新冠疫苗，4月13日新增
         'sfjzdezxgym':old['sfjzdezxgym'],        #是否接种第二剂新冠疫苗，4月13日新增
+        'sfjzdszxgym':old['sfjzdszxgym'],
         'jzxgymrq': old['jzxgymrq'],
         'jzdezxgymrq': old['jzdezxgymrq'],
+        'jzdszxgymrq': old['jzdszxgymrq'],
 	'zgfxdq': old['zgfxdq'],
 	'mjry': old['mjry'],
 	'csmjry': old['csmjry'],
