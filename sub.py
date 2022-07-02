@@ -31,6 +31,12 @@ s.headers.update(header)
 user = "你的账户"    # 账号
 passwd = "你的密码"   # 川大统一认证密码
 api_key = "你的server酱api"  # server酱的api，填了可以微信通知打卡结果，不填没影响
+miraiApiAddr = "127.0.0.1" #mirai地址，本地填127.0.0.1
+miraiApiPort = "1771" #mirai端口号，改为自己的
+qqNum = "12345678" #填你的QQ号，用于接受QQ通知
+
+bQQAlert = true #是否启用QQ通知
+bMicromsgAlert = false # 是否启用微信通知
 
 def login(s: requests.Session, username, password):
     #r = s.get(
@@ -135,8 +141,15 @@ def message(key, title, body):
     """
     微信通知打卡结果
     """
-    msg_url = "https://sc.ftqq.com/{}.send?text={}&desp={}".format(key, title, body)
-    requests.get(msg_url)
+    if bMicromsgAlert == true :
+        msg_url = "https://sc.ftqq.com/{}.send?text={}&desp={}".format(key, title, body)
+        requests.get(msg_url)
+    """
+    QQ通知打卡结果
+    """
+    if bQQAlert == true:
+	req=requests.post("http://{}:{}/sendFriendMessage".format(miraiApiAddr, miraiApiPort), json={"qq":"{}".format(qqNum),"messageChain":[{"type":"Plain","text":"疫情防控通自动填报结果通知 (SCU)\n打卡结果：{}\n\n学号：{}\n时间：{}".format(title, user, datetime.now(tz=pytz.timezone("Asia/Shanghai")).strftime("%Y-%m-%d %H:%M:%S"))}]})
+        print(req.text)
 
 
 if __name__ == "__main__":
