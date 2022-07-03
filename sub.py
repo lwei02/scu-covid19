@@ -40,8 +40,8 @@ miraiApiAddr = "127.0.0.1" #mirai地址，本地填127.0.0.1
 miraiApiPort = "1771" #mirai端口号，改为自己的
 qqNum = "12345678" #填你的QQ号，用于接受QQ通知
 
-bQQAlert = true #是否启用QQ通知
-bMicromsgAlert = false # 是否启用微信通知
+bQQAlert = True #是否启用QQ通知
+bMicromsgAlert = False # 是否启用微信通知
 
 def login(s: requests.Session, username, password):
     #r = s.get(
@@ -134,11 +134,11 @@ def submit(s: requests.Session, old: dict):
     result = r.json()
     if result.get('m') == "操作成功":
         print("打卡成功")
-        if bMicromsgAlert||bQQAlert:
+        if bMicromsgAlert or bQQAlert:
             message(api_key, result.get('m'), new_daily)
     else:
         print("打卡失败，错误信息: ", r.json().get("m"))
-        if bMicromsgAlert||bQQAlert:
+        if bMicromsgAlert or bQQAlert:
             message(api_key, result.get('m'), new_daily)
 
 
@@ -146,13 +146,13 @@ def message(key, title, body):
     """
     微信通知打卡结果
     """
-    if bMicromsgAlert == true :
+    if bMicromsgAlert == True :
         msg_url = "https://sc.ftqq.com/{}.send?text={}&desp={}".format(key, title, body)
         requests.get(msg_url)
     """
     QQ通知打卡结果
     """
-    if bQQAlert == true:
+    if bQQAlert == True:
 	req=requests.post("http://{}:{}/sendFriendMessage".format(miraiApiAddr, miraiApiPort), json={"qq":"{}".format(qqNum),"messageChain":[{"type":"Plain","text":"疫情防控通自动填报结果通知 (SCU)\n打卡结果：{}\n\n学号：{}\n时间：{}".format(title, user, datetime.now(tz=pytz.timezone("Asia/Shanghai")).strftime("%Y-%m-%d %H:%M:%S"))}]})
         print(req.text)
 
