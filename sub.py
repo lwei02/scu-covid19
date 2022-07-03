@@ -134,11 +134,11 @@ def submit(s: requests.Session, old: dict):
     result = r.json()
     if result.get('m') == "操作成功":
         print("打卡成功")
-        if api_key:
+        if bMicromsgAlert||bQQAlert:
             message(api_key, result.get('m'), new_daily)
     else:
         print("打卡失败，错误信息: ", r.json().get("m"))
-        if api_key:
+        if bMicromsgAlert||bQQAlert:
             message(api_key, result.get('m'), new_daily)
 
 
