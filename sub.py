@@ -3,12 +3,17 @@
 进入https://wfw.scu.edu.cn/ncov/wap/default/index即打卡网页，登录后在“所在地点”中获取当前位置信息，
 然后F12，在element里面用ctrl+f搜索geo_api_info，把对应位置的geo_api_info的内容复制到https://www.sojson.com/yasuo.html
 先"去除转义"再"unicode转中文"，把获取的结果复制到下面对应的geo_api_info的位置，此脚本中地址默认为四川大学望江校区，江安校区的地址在注释中，可以自行添加/取消注释。
+
+QQ通知使用Mirai API，请自行安装到服务器并添加机器人为好友
+微信通知沿用原版本，请查看README.md获取详细用法
 '''
 
 # -*- coding: utf-8 -*-
 """
-Modified on 20210930
+Modified on 20220703
 @author: HyperMn
+
+@modified by: lwei02 // Added the third shot copying and QQ alert
 """
 
 """
