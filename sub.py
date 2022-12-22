@@ -11,6 +11,8 @@ Modified on 20221218
 By: lwei02
 
 Changelog:
+2022-12-22:
+ - 修复因系统升级造成所在地点空信息问题
 2022-12-18: 
  - 修复了因为学校打卡系统升级导致的打卡失败问题
 2022-07-03: 
@@ -87,18 +89,26 @@ def submit(s: requests.Session, old: dict):
         "date": datetime.now(tz=pytz.timezone("Asia/Shanghai")).strftime("%Y%m%d"),
         "dqglzt": old["dqglzt"],
         "dqjczts": old["dqjczts"],
+        'fjsj': old['fjsj'],
+        'fxyy': old['fxyy'],
         'geo_api_info': '{"type":"complete","position":{"Q":30.552839084202,"R":103.99331054687502,"lng":103.993311,"lat":30.552839},"location_type":"html5","message":"Get sdkLocation failed.Get geolocation success.Convert Success.Get address success.","accuracy":315,"isConverted":true,"status":1,"addressComponent":{"citycode":"028","adcode":"510116","businessAreas":[{"name":"白家","id":"510116","location":{"Q":30.562482,"R":104.006821,"lng":104.006821,"lat":30.562482}}],"neighborhoodType":"","neighborhood":"","building":"","buildingType":"","street":"川大路三段","streetNumber":"365号","country":"中国","province":"四川省","city":"成都市","district":"双流区","township":"西航港街道"},"formattedAddress":"四川省成都市双流区西航港街道四川大学江安校区学生西园8舍围合","roads":[],"crosses":[],"pois":[],"info":"SUCCESS"}', # 10
-        #'geo_api_info': '{"type":"complete","position":{"Q":30.62923529731,"R":104.09010172526098,"lng":104.090102,"lat":30.629235},"location_type":"html5","message":"Get sdkLocation failed.Get geolocation success.Convert Success.Get address success.","accuracy":40,"isConverted":true,"status":1,"addressComponent":{"citycode":"028","adcode":"510107","businessAreas":[],"neighborhoodType":"科教文化服务;学校;高等院校","neighborhood":"四川大学","building":"","buildingType":"","street":"望江路","streetNumber":"71号","country":"中国","province":"四川省","city":"成都市","district":"武侯区","township":"望江路街道"},"formattedAddress":"四川省成都市武侯区望江路街道四川大学四川大学望江校区","roads":[],"crosses":[],"pois":[],"info":"SUCCESS"}',
-        'glksrq': old['glksrq'],
+        # 'geo_api_info': '{"type":"complete","position":{"Q":30.62923529731,"R":104.09010172526098,"lng":104.090102,"lat":30.629235},"location_type":"html5","message":"Get sdkLocation failed.Get geolocation success.Convert Success.Get address success.","accuracy":40,"isConverted":true,"status":1,"addressComponent":{"citycode":"028","adcode":"510107","businessAreas":[],"neighborhoodType":"科教文化服务;学校;高等院校","neighborhood":"四川大学","building":"","buildingType":"","street":"望江路","streetNumber":"71号","country":"中国","province":"四川省","city":"成都市","district":"武侯区","township":"望江路街道"},"formattedAddress":"四川省成都市武侯区望江路街道四川大学四川大学望江校区","roads":[],"crosses":[],"pois":[],"info":"SUCCESS"}',
+        'glksrq': old['glksrq'], 
         'gllx': old['gllx'],
         'gtjzzfjsj': old['gtjzzfjsj'],
-        'gwszdd':'',
-        'hsjcdd':old['hsjcdd'],
+        'gwszdd':'', 
+        'hsjcdd':old['hsjcdd'], 
         'hsjcjg':old['hsjcjg'],
         'hsjcrq': old['hsjcrq'],
         'id': old['id'],
+        'ismoved': old['ismoved'],
         'jcbhlx': old['jcbhlx'],
         'jcbhrq': old['jcbhrq'],
+        'jcjg': old['jcjg'],
+        'jcjgqr': old['jcjgqr'],
+        'jcqzrq': old['jcqzrq'],
+        'jcwhryfs': old['jcwhryfs'],
+        'jchbryfs': old['jchbryfs'],
         'jrsfqzfy': '',
         'jrsfqzys': '',
         'jzdezxgymrq': old['jzdezxgymrq'],
@@ -115,10 +125,12 @@ def submit(s: requests.Session, old: dict):
         "sfjchbry": old["sfjchbry"],
         "sfjcqz": old["sfjcqz"],
         "sfjcwhry": old["sfjcwhry"],
+        'sfjxhsjc': old['sfjxhsjc'],
         "sfjzdezxgym": old["sfjzdezxgym"],
         "sfjzdszxgym": old["sfjzdszxgym"],
         "sfjzxgym": old["sfjzxgym"],
         "sfmjry": old["sfmjry"],
+        'sfsfbh': old['sfsfbh'],
         "sfsqhzjkk": old["sfsqhzjkk"],
         "sftjhb": old["sftjhb"],
         "sftjwh": old["sftjwh"],
@@ -126,13 +138,18 @@ def submit(s: requests.Session, old: dict):
         "sfyqjzgc": "",
         "sfyyjc": old["sfyyjc"],
         "sfzx": old["sfzx"],
+        'old_sfzx': old['old_sfzx'],
         "sqhzjkkys": old["sqhzjkkys"],
         "szcs": old["szcs"],
+        'szdd': old['szdd'],
+        'old_szdd': old['old_szdd'],
         "szgj": old["szgj"],
+        'old_szgj': old['old_szgj'],
         "szsqsfybl": old["szsqsfybl"],
         "szxqmc": old["szxqmc"],
         "tw": old["tw"],
         "uid": old["uid"],
+        'xjzd': old['xjzd'],
         "zgfxdq": old["zgfxdq"],
         'app_id': 'scu'
         }
