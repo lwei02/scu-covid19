@@ -1,13 +1,6 @@
-'''
-！！！必看！！！
-进入https://wfw.scu.edu.cn/ncov/wap/default/index即打卡网页，登录后在“所在地点”中获取当前位置信息，
-然后F12，在element里面用ctrl+f搜索geo_api_info，把对应位置的geo_api_info的内容复制到https://www.sojson.com/yasuo.html
-先"去除转义"再"unicode转中文"，把获取的结果复制到下面对应的geo_api_info的位置，此脚本中地址默认为四川大学望江校区，江安校区的地址在注释中，可以自行添加/取消注释。
-'''
-
 # -*- coding: utf-8 -*-
 '''
-Modified on 20221218
+Modified on 20221228
 By: lwei02
 
 Changelog:
