@@ -11,6 +11,8 @@ Modified on 20221218
 By: lwei02
 
 Changelog:
+2022-12-28:
+ - 重写表单内容，修复打卡失败问题（表单变化频繁，建议有能力者自行F12查看提交数据调整表单内容）
 2022-12-22:
  - 修复因系统升级造成所在地点空信息问题
 2022-12-18: 
@@ -78,81 +80,71 @@ def get_daily(s: requests.Session):
 
 def submit(s: requests.Session, old: dict):
     new_daily = {
-        "address": old["address"],
-        "area": old["area"],
-        "bztcyy": old["bztcyy"],
-        "bzxyy": old["bzxyy"],
-        "city": old["city"],
-        "created": str(int(time())),
-        "created_uid": old["created_uid"],
-        "csmjry": old["csmjry"],
-        "date": datetime.now(tz=pytz.timezone("Asia/Shanghai")).strftime("%Y%m%d"),
-        "dqglzt": old["dqglzt"],
-        "dqjczts": old["dqjczts"],
-        'fjsj': old['fjsj'],
-        'fxyy': old['fxyy'],
-        'geo_api_info': '{"type":"complete","position":{"Q":30.552839084202,"R":103.99331054687502,"lng":103.993311,"lat":30.552839},"location_type":"html5","message":"Get sdkLocation failed.Get geolocation success.Convert Success.Get address success.","accuracy":315,"isConverted":true,"status":1,"addressComponent":{"citycode":"028","adcode":"510116","businessAreas":[{"name":"白家","id":"510116","location":{"Q":30.562482,"R":104.006821,"lng":104.006821,"lat":30.562482}}],"neighborhoodType":"","neighborhood":"","building":"","buildingType":"","street":"川大路三段","streetNumber":"365号","country":"中国","province":"四川省","city":"成都市","district":"双流区","township":"西航港街道"},"formattedAddress":"四川省成都市双流区西航港街道四川大学江安校区学生西园8舍围合","roads":[],"crosses":[],"pois":[],"info":"SUCCESS"}', # 10
-        # 'geo_api_info': '{"type":"complete","position":{"Q":30.62923529731,"R":104.09010172526098,"lng":104.090102,"lat":30.629235},"location_type":"html5","message":"Get sdkLocation failed.Get geolocation success.Convert Success.Get address success.","accuracy":40,"isConverted":true,"status":1,"addressComponent":{"citycode":"028","adcode":"510107","businessAreas":[],"neighborhoodType":"科教文化服务;学校;高等院校","neighborhood":"四川大学","building":"","buildingType":"","street":"望江路","streetNumber":"71号","country":"中国","province":"四川省","city":"成都市","district":"武侯区","township":"望江路街道"},"formattedAddress":"四川省成都市武侯区望江路街道四川大学四川大学望江校区","roads":[],"crosses":[],"pois":[],"info":"SUCCESS"}',
-        'glksrq': old['glksrq'], 
-        'gllx': old['gllx'],
-        'gtjzzfjsj': old['gtjzzfjsj'],
-        'gwszdd':'', 
-        'hsjcdd':old['hsjcdd'], 
-        'hsjcjg':old['hsjcjg'],
-        'hsjcrq': old['hsjcrq'],
-        'id': old['id'],
-        'ismoved': old['ismoved'],
-        'jcbhlx': old['jcbhlx'],
-        'jcbhrq': old['jcbhrq'],
-        'jcjg': old['jcjg'],
-        'jcjgqr': old['jcjgqr'],
-        'jcqzrq': old['jcqzrq'],
-        'jcwhryfs': old['jcwhryfs'],
-        'jchbryfs': old['jchbryfs'],
-        'jrsfqzfy': '',
-        'jrsfqzys': '',
-        'jzdezxgymrq': old['jzdezxgymrq'],
-        "jzdszxgymrq": old["jzdszxgymrq"],
-        "jzxgymrq": old["jzxgymrq"],
-        "mjry": old["mjry"],
-        "province": old["province"],
-        "qksm": old["qksm"],
-        "remark": old["remark"],
-        "sfcxtz": old["sfcxtz"],
-        "sfcxzysx": old["sfcxzysx"],
-        "sfcyglq": old["sfcyglq"],
-        "sfjcbh": old["sfjcbh"],
-        "sfjchbry": old["sfjchbry"],
-        "sfjcqz": old["sfjcqz"],
-        "sfjcwhry": old["sfjcwhry"],
-        'sfjxhsjc': old['sfjxhsjc'],
-        "sfjzdezxgym": old["sfjzdezxgym"],
-        "sfjzdszxgym": old["sfjzdszxgym"],
-        "sfjzxgym": old["sfjzxgym"],
-        "sfmjry": old["sfmjry"],
-        'sfsfbh': old['sfsfbh'],
-        "sfsqhzjkk": old["sfsqhzjkk"],
-        "sftjhb": old["sftjhb"],
-        "sftjwh": old["sftjwh"],
-        "sfygtjzzfj": old["sfygtjzzfj"],
-        "sfyqjzgc": "",
-        "sfyyjc": old["sfyyjc"],
-        "sfzx": old["sfzx"],
-        'old_sfzx': old['old_sfzx'],
-        "sqhzjkkys": old["sqhzjkkys"],
-        "szcs": old["szcs"],
-        'szdd': old['szdd'],
-        'old_szdd': old['old_szdd'],
-        "szgj": old["szgj"],
-        'old_szgj': old['old_szgj'],
-        "szsqsfybl": old["szsqsfybl"],
-        "szxqmc": old["szxqmc"],
-        "tw": old["tw"],
-        "uid": old["uid"],
-        'xjzd': old['xjzd'],
-        "zgfxdq": old["zgfxdq"],
-        'app_id': 'scu'
-        }
+        'zgfxdq': old['zgfxdq'], #走过风险地区（？
+        'mjry': old['mjry'], #密接人员（？
+        'csmjry': old['csmjry'], #??密接人员（？
+        'szxqmc': old['szxqmc'], #所在校区名称
+        'sfjzxgym': old['sfjzxgym'], #是否接种新冠疫苗
+        'jzxgymrq': old['jzxgymrq'], #接种新冠疫苗日期
+        'sfjzdezxgym': old['sfjzdezxgym'], #是否接种第二针新冠疫苗
+        'jzdezxgymrq': old['jzdezxgymrq'], #接种第二针新冠疫苗日期
+        'sfjzdszxgym': old['sfjzdszxgym'], #是否接种第三针新冠疫苗
+        'jzdszxgymrq': old['jzdszxgymrq'], #接种第三针新冠疫苗日期
+        'dqjczts': old['dqjczts'], #当前????（未知时间弃用）
+        'dqglzt': old['dqglzt'], #当前隔离状态（未知时间弃用）
+        'sfmjry': old['sfmjry'], #是否密接人员
+        'szdd': old['szdd'], #所在地点（2022-12，新）
+        'sfwzzgrz': old['sfwzzgrz'], #是否????
+        'sfwwzzgrz': old['sfwwzzgrz'], #是否????
+        'address': old['address'], #地址（2022-12弃用）
+        'area': old['area'], #地区（2022-12弃用）
+        'bztcyy': old['bztcyy'], #不在同城原因（2022-12弃用）
+        'bzxyy': old['bzxyy'], #不在校原因（2022-12弃用）
+        'city': old['city'], #城市（2022-12弃用）
+        'created': str(int(time())), #表单创建时间戳
+        "date": datetime.now(tz=pytz.timezone("Asia/Shanghai")).strftime("%Y%m%d"), #日期
+        'geo_api_info': '{"type":"complete","position":{"Q":30.62923529731,"R":104.09010172526098,"lng":104.090102,"lat":30.629235},"location_type":"html5","message":"Get sdkLocation failed.Get geolocation success.Convert Success.Get address success.","accuracy":40,"isConverted":true,"status":1,"addressComponent":{"citycode":"028","adcode":"510107","businessAreas":[],"neighborhoodType":"科教文化服务;学校;高等院校","neighborhood":"四川大学","building":"","buildingType":"","street":"望江路","streetNumber":"71号","country":"中国","province":"四川省","city":"成都市","district":"武侯区","township":"望江路街道"},"formattedAddress":"四川省成都市武侯区望江路街道四川大学四川大学望江校区","roads":[],"crosses":[],"pois":[],"info":"SUCCESS"}', #高德API返回信息（2022-12弃用）
+        'glksrq': old['glksrq'], #隔离开始日期（未知时间弃用）
+        'gllx': old['gllx'], #隔离类型（未知时间弃用）
+        'gtjzzfjsj': old['gtjzzfjsj'], #共同居住???时间（未知时间弃用）
+        'hsjcdd': old['hsjcdd'], #核酸检测地点（未知时间弃用）
+        'hsjcjg': old['hsjcjg'], #核酸检测结果（未知时间弃用）
+        'hsjcrq': old['hsjcrq'], #核酸检测日期（未知时间弃用）
+        'jcbhlx': old['jcbhlx'], #接触病号类型（？，未知时间弃用）
+        'jcbhrq': old['jcbhrq'], #接触病号日期（？，未知时间弃用）
+        'province': old['province'], #省份（2022-12弃用）
+        'qksm': old['qksm'], #情况说明（2022-12弃用）
+        'remark': old['remark'], #备注（2022-12弃用）
+        'sfcxtz': old['sfcxtz'], #是否???（未知时间弃用，但仍有数据0）
+        'sfcxzysx': old['sfcxzysx'], #是否???（未知时间弃用，但仍有数据0）
+        'sfcyglq': old['sfcyglq'], #是否处于隔离期（未知时间弃用，但仍有数据0）
+        'sfjcbh': old['sfjcbh'], #是否接触病号（？，未知时间弃用，但仍有数据0）
+        'sfjchbry': old['sfjchbry'], #是否接触湖北人员（未知时间弃用，但仍有数据0）
+        'sfjcqz': old['sfjcqz'], #是否接触确诊（未知时间弃用）
+        'sfjcwhry': old['sfjcwhry'], #是否接触武汉人员（未知时间弃用，但仍有数据0）
+        'sfsqhzjkk': old['sfsqhzjkk'], #是否???（未知时间弃用，但仍有数据0）
+        'sftjhb': old['sftjhb'], #是否???（未知时间弃用，但仍有数据0）
+        'sftjwh': old['sftjwh'], #是否???（未知时间弃用，但仍有数据0）
+        'sfygtjzzfj': old['sfygtjzzfj'], #是否有共同居住???（未知时间弃用，但仍有数据0）
+        'sfyyjc': old['sfyyjc'], #是否????（未知时间弃用，但仍有数据0）
+        'sfzx': old['sfzx'], #是否在校（未知时间弃用，但仍有数据1）
+        'sqhzjkkys': old['sqhzjkkys'], #未知（未知时间弃用）
+        'szcs': old['szcs'], #所在城市（2022-12弃用）
+        'szgj': old['szgj'], #所在国家（2022-12弃用）
+        'szsqsfybl': old['szsqsfybl'], #所在社区是否有病例（未知时间弃用，但仍有数据0）
+        'tw': old['tw'], #体温（2022-12弃用）
+        'uid': old['uid'], #用户id
+        'jcjgqr': old['jcjgqr'], #检测结果确认（？，未知时间弃用）
+        'jcqzrq': old['jcqzrq'], #接触确诊日期（？，未知时间弃用）
+        'jcjg': old['jcjg'], #检测结果（？，未知时间弃用）
+        'id': old['id'], #id
+        # 此行下默认为空，旧资料中亦无此5项，直接置空
+        'gwszdd': '', #未知
+        'sfyqjzgc': '', #是否有?????
+        'jrsfqzys': '', #未知
+        'jrsfqzfy': '', #未知
+        'szgjcs': '' #未知
+    }
 
     r = s.post("https://wfw.scu.edu.cn/ncov/wap/default/save", data=new_daily, timeout=3)
     print("提交信息:", new_daily)
