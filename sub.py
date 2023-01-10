@@ -6,6 +6,7 @@ By: lwei02
 Changelog:
 2023-01-11:
  - 新加入另一个旧数据来源以应对API接口中'szdd'属性值错误的问题（使用填报前端页面内预渲染的内容作为数据来源）
+ - 替换geo_api_info内容来源
 2022-12-28:
  - 重写表单内容，修复打卡失败问题（表单变化频繁，建议有能力者自行F12查看提交数据调整表单内容）
 2022-12-22:
@@ -111,7 +112,7 @@ def submit(s: requests.Session, old: dict, old2: dict):
         'city': old['city'], #城市（2022-12弃用）
         'created': str(int(time())), #表单创建时间戳
         "date": datetime.now(tz=pytz.timezone("Asia/Shanghai")).strftime("%Y%m%d"), #日期
-        'geo_api_info': '{"type":"complete","position":{"Q":30.62923529731,"R":104.09010172526098,"lng":104.090102,"lat":30.629235},"location_type":"html5","message":"Get sdkLocation failed.Get geolocation success.Convert Success.Get address success.","accuracy":40,"isConverted":true,"status":1,"addressComponent":{"citycode":"028","adcode":"510107","businessAreas":[],"neighborhoodType":"科教文化服务;学校;高等院校","neighborhood":"四川大学","building":"","buildingType":"","street":"望江路","streetNumber":"71号","country":"中国","province":"四川省","city":"成都市","district":"武侯区","township":"望江路街道"},"formattedAddress":"四川省成都市武侯区望江路街道四川大学四川大学望江校区","roads":[],"crosses":[],"pois":[],"info":"SUCCESS"}', #高德API返回信息（2022-12弃用）
+        'geo_api_info': old2['geo_api_info'], #高德API返回信息（2022-12弃用，但仍出现于打卡信息中）
         'glksrq': old['glksrq'], #隔离开始日期（未知时间弃用）
         'gllx': old['gllx'], #隔离类型（未知时间弃用）
         'gtjzzfjsj': old['gtjzzfjsj'], #共同居住???时间（未知时间弃用）
