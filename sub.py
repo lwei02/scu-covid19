@@ -4,6 +4,8 @@ Modified on 20221228
 By: lwei02
 
 Changelog:
+2023-01-11:
+ - 新加入另一个旧数据来源以应对API接口中'szdd'属性值错误的问题（使用填报前端页面内预渲染的内容作为数据来源）
 2022-12-28:
  - 重写表单内容，修复打卡失败问题（表单变化频繁，建议有能力者自行F12查看提交数据调整表单内容）
 2022-12-22:
@@ -31,6 +33,7 @@ import requests
 from time import sleep,time
 from random import randint
 from datetime import datetime
+import json, re
 
 
 s = requests.Session()
@@ -55,7 +58,7 @@ def login(s: requests.Session, username, password):
     r = s.post("https://wfw.scu.edu.cn/a_scu/api/sso/check", data=payload, timeout=3)
     if r.json().get('m') != "操作成功":
         print(r.text)
-        print("登录失败")
+        message("登录失败")
         exit(1)
 
 
@@ -64,14 +67,26 @@ def get_daily(s: requests.Session):
     j = daily.json()
     d = j.get('d', None)
     if d:
-
         return daily.json()['d']
     else:
-        print("获取昨日信息失败")
+        message("获取昨日信息失败")
+        exit(1)
+       
+def get_inpage_info(s: requests.Session):
+    try:
+        x = s.get('https://wfw.scu.edu.cn/ncov/wap/default/index', timeout=3)
+        y = re.search(r'var def = (.*?);\n', x.text).group(1)
+        z = json.loads(y)
+        if 'szdd' in z:
+            return z
+        else:
+            raise "'szdd' attribute missing"
+    except Exception as e:
+        message("获取旧所在地点信息失败：" + str(e))
         exit(1)
 
 
-def submit(s: requests.Session, old: dict):
+def submit(s: requests.Session, old: dict, old2: dict):
     new_daily = {
         'zgfxdq': old['zgfxdq'], #走过风险地区（？
         'mjry': old['mjry'], #密接人员（？
@@ -86,7 +101,7 @@ def submit(s: requests.Session, old: dict):
         'dqjczts': old['dqjczts'], #当前????（未知时间弃用）
         'dqglzt': old['dqglzt'], #当前隔离状态（未知时间弃用）
         'sfmjry': old['sfmjry'], #是否密接人员
-        'szdd': old['szdd'], #所在地点（2022-12，新）
+        'szdd': old2['szdd'], #所在地点（2022-12，新）
         'sfwzzgrz': old['sfwzzgrz'], #是否????
         'sfwwzzgrz': old['sfwwzzgrz'], #是否????
         'address': old['address'], #地址（2022-12弃用）
@@ -160,14 +175,13 @@ def message(title):
         requests.get(msg_url)
     if mirai_addr != '' and mirai_addr != None and qq_target != '' and qq_target != None:
         r=requests.post("http://%s/sendFriendMessage" % mirai_addr, json={"qq":qq_target,"messageChain":[{"type":"Plain","text":"疫情防控通自动填报结果通知 (SCU)\n打卡结果：{}\n\n学号：{}\n时间：{}".format(title, user, datetime.now(tz=pytz.timezone("Asia/Shanghai")).strftime("%Y-%m-%d %H:%M:%S.%f")[:-3])}]})
-        print(r.text)
 
 if __name__ == "__main__":
     print(datetime.now(tz=pytz.timezone("Asia/Shanghai")).strftime("%Y-%m-%d %H:%M:%S %Z"))
     for i in range(randint(10,600),0,-1):
         print("\r等待{}秒后填报".format(i),end='')
-        sleep(1)
-
+        #sleep(1)
     login(s, user, passwd)
-    yesterday = get_daily(s)
-    submit(s, yesterday)
+    yesterday_api_info = get_daily(s)
+    yesterday_inpage_info = get_inpage_info(s)
+    submit(s, yesterday_api_info, yesterday_inpage_info)
